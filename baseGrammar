@@ -1,0 +1,139 @@
+
+// this spawn keeps the base consistent
+rule spawn {
+  set seed initial // keeps things cleaner
+  base
+} 
+
+// frame/skeleton of beads
+rule base {
+  { x 0.1 rx 0.1 s 0.99 sat  0.99  } base
+  sphere
+}
+
+rule base w base_rule_weight{
+  { x 0.1 s 0.99 rx -02 ry 1 rx -1 } base
+  base_rule_shape
+}
+
+rule base maxdepth 1 > firework {
+  { x 0.1 s 0.99 ry -1 rx -1 } base
+  sphere
+}
+
+rule base w recursive_rule_on maxdepth 1 > recursive_rule{
+  { x 0.1 s 0.99 rx -02 ry 1 rx -1 } base
+  sphere
+}
+
+// fireworks grow out of the base
+rule firework w 10 {
+   { s 0.9 rz 1 h 5 rx 5 x 1 }  firework
+   { s 1 0.2 0.5 } sphere
+}
+
+rule firework w 15 maxdepth maxFireworkDepth > flower_bud {
+    {  s 0.99 rz -5 h 5 rx -5 x 4 }   firework
+    { s 1 0.2 0.5 } firework_shape
+}
+
+// forming the star terminal
+rule star1 w 10 {
+{ s 0.8 h 5 rx 5 x 1 } star1
+{ s 2 0.2 0.5 color color2 } star_shape
+}
+
+rule star2 w 10 {
+{ s 0.8 h 5 ry 5 y 1 } star2
+{ s 2 0.2 0.5 color color2 } star_shape
+}
+
+rule star3 w 10 {
+{ s 0.8 h 5 rz 5 z 1 } star3
+{ s 2 0.2 0.5 color color2 } star_shape
+}
+
+rule star4 w 10 {
+{ s 0.8 h 5 rx 5 x -1 } star4
+{ s 2 0.2 0.5 color color2 } star_shape
+}
+
+rule star5 w 10 {
+{ s 0.8 h 5 ry 5 y -1 } star5
+{ s 2 0.2 0.5 color color2 } star_shape
+}
+
+rule star6 w 10 {
+{ s 0.8 h 5 rz 5 z -1 } star6
+{ s 2 0.2 0.5 color color2 } star_shape
+}
+
+rule star {
+star1
+star2
+star3
+star4
+star5
+star6
+}
+
+
+// quad terminal
+rule quad_terminal md 8 {
+{ x -recursive_offset y -recursive_offset z -recursive_offset s recursive_size } quad_terminal
+{ x recursive_offset y -recursive_offset z -recursive_offset s recursive_size } quad_terminal
+{ x -recursive_offset y recursive_offset z -recursive_offset s recursive_size } quad_terminal
+{ x recursive_offset y recursive_offset z -recursive_offset s recursive_size } quad_terminal
+{ x -recursive_offset y -recursive_offset z recursive_offset s recursive_size } quad_terminal
+{ x recursive_offset y -recursive_offset z recursive_offset s recursive_size } quad_terminal
+{ x -recursive_offset y recursive_offset z recursive_offset s recursive_size } quad_terminal
+{ x recursive_offset y recursive_offset z recursive_offset s recursive_size } quad_terminal
+{ color random } sphere
+}
+
+// double terminal
+rule double_terminal md 5 {
+{ x -recursive_offset y -recursive_offset z recursive_offset s recursive_size } double_terminal
+{ x recursive_offset y -recursive_offset z recursive_offset s recursive_size } double_terminal
+{ color random } sphere
+}
+
+rule taurus {
+20 * { rz 360/20 color color3 } 1 * { x 1 ry z_rotation} sphere
+}
+
+rule drop w 2{
+  { x 0.1 s 1.15 rx 1 ry 1 rx 1 } drop
+  { hue 2 sat 2 s 0.7 color color1} sphere
+}
+
+rule pellet w 2{
+  { x 0.1 s 1.05 rx 1 ry 1 rx 1 } pellet
+  { x -0.1 s 1.05 rx 1 ry 1 rx 1 } pellet
+ { hue 2 sat 2 s 0.7 color color1} sphere
+}
+
+rule vine w 10{
+  { x 0.1 s 0.99 rx -02 ry 1 rx -1 color color2} vine
+  box
+}
+
+rule vine w 0.1{
+box
+}
+
+// flower bud is a terminal
+rule flower_bud {
+    { s 3 hue 10 color color2} flower_bud_shape
+}
+
+rule tree w 1 maxdepth tree_recursion_depth > firework {
+    { z 1 ry 6 rx 1   s 0.91  color color3 hue 1  y 0.01 blend color2 0.4 } tree
+    tree_shape
+}
+
+rule tree w 0.2 {
+    { z 1 ry 6   s 0.99  color color2 hue 1 } tree
+    { rz 60  color color1 } tree
+    tree_shape
+}
